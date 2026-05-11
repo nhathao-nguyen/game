@@ -4,6 +4,7 @@ const env = require('./src/config/env');
 const app = require('./src/app');
 const { testConnection } = require('./src/db/database');
 const { runMigrations } = require('./src/db/migrations');
+const { runSeeds } = require('./src/db/seeds');
 
 async function start() {
   try {
@@ -12,6 +13,9 @@ async function start() {
 
     // 2. Chạy migrations (tạo bảng nếu chưa có)
     await runMigrations();
+
+    // 3. Seed data mặc định (realms, enemies)
+    await runSeeds();
 
     // 3. Start HTTP server
     const server = app.listen(env.port, () => {
