@@ -2,6 +2,7 @@
 
 const { Router } = require('express');
 const authRoutes = require('./auth.routes');
+const userRoutes = require('./user.routes');
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router.get('/health', (req, res) => {
 
 // Auth routes
 router.use('/auth', authRoutes);
+
+// User routes (protected)
+router.use('/user', userRoutes);
 
 // 404 handler cho routes không tồn tại
 router.use((req, res) => {

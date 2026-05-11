@@ -16,6 +16,16 @@ const MIGRATIONS = [
       );
     `,
   },
+  {
+    name: 'create_user_ui_states_table',
+    sql: `
+      CREATE TABLE IF NOT EXISTS user_ui_states (
+        user_id    INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        active_tab VARCHAR(50)  NOT NULL DEFAULT 'chi-so',
+        updated_at TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+      );
+    `,
+  },
 ];
 
 /**
