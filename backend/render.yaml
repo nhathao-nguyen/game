@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: tutien-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: BCRYPT_SALT_ROUNDS
+        value: "10"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tutien-postgres
+          property: connectionString
+
+databases:
+  - name: tutien-postgres
+    databaseName: tutien_db
+    user: tutien_user
+    plan: free

@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tutien-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tutien_user
+      POSTGRES_PASSWORD: tutien_pass
+      POSTGRES_DB: tutien_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - tutien_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tutien_user -d tutien_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  tutien_pgdata:
+    driver: local
