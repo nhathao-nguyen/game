@@ -7,6 +7,9 @@ const { AppError } = require('../utils/AppError');
 
 const OFFLINE_CAP_HOURS = 12;
 
+/** BigInt-safe min (Math.min không hỗ trợ BigInt) */
+function bigMin(a, b) { return a < b ? a : b; }
+
 /** Tính offline progress (server-authoritative, không tin client) */
 function calcOfflineGain(tuvi_rate, is_cultivating, last_synced_at) {
   if (!is_cultivating) return 0;
@@ -27,7 +30,7 @@ async function getOrCreate(userId) {
 async function getStatus(userId) {
   const char    = await getOrCreate(userId);
   const offline = calcOfflineGain(char.tuvi_rate, char.is_cultivating, char.last_synced_at);
-  const newTuvi = Math.min(BigInt(char.tuvi_current) + BigInt(offline), BigInt(char.tuvi_cap));
+  const newTuvi = bigMin(BigInt(char.tuvi_current) + BigInt(offline), BigInt(char.tuvi_cap));
 
   if (offline > 0) {
     await charRepo.update(pool, char.id, {
@@ -51,7 +54,7 @@ async function getStatus(userId) {
 async function toggleCultivation(userId, action) {
   const char = await getOrCreate(userId);
   const offline = calcOfflineGain(char.tuvi_rate, char.is_cultivating, char.last_synced_at);
-  const newTuvi = Math.min(BigInt(char.tuvi_current) + BigInt(offline), BigInt(char.tuvi_cap));
+  const newTuvi = bigMin(BigInt(char.tuvi_current) + BigInt(offline), BigInt(char.tuvi_cap));
   const cultivating = action === 'start';
 
   await charRepo.update(pool, char.id, {
@@ -67,7 +70,7 @@ async function breakthrough(userId) {
   const char = await getOrCreate(userId);
   // Sync offline trước
   const offline = calcOfflineGain(char.tuvi_rate, char.is_cultivating, char.last_synced_at);
-  const syncedTuvi = Math.min(BigInt(char.tuvi_current) + BigInt(offline), BigInt(char.tuvi_cap));
+  const syncedTuvi = bigMin(BigInt(char.tuvi_current) + BigInt(offline), BigInt(char.tuvi_cap));
 
   if (syncedTuvi < BigInt(char.tuvi_cap)) {
     throw new AppError('Tu vi chưa đủ để đột phá', 400, 'INSUFFICIENT_TUVI');
