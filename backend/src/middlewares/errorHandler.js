@@ -1,6 +1,6 @@
 'use strict';
 
-const { AppError } = require('../services/auth.service');
+const { AppError } = require('../utils/AppError');
 
 /**
  * Global error handler — Express nhận biết vì có 4 tham số (err, req, res, next).

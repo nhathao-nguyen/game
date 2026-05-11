@@ -5,16 +5,7 @@ const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const userRepo = require('../repositories/user.repository');
 
-/**
- * Lớp lỗi tùy chỉnh để phân biệt lỗi nghiệp vụ vs lỗi hệ thống.
- */
-class AppError extends Error {
-  constructor(message, statusCode) {
-    super(message);
-    this.statusCode = statusCode;
-    this.isOperational = true;
-  }
-}
+const { AppError } = require('../utils/AppError');
 
 /**
  * Tạo JWT token cho user.
