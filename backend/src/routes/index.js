@@ -1,8 +1,10 @@
 'use strict';
 
-const { Router } = require('express');
-const authRoutes = require('./auth.routes');
-const userRoutes = require('./user.routes');
+const { Router }      = require('express');
+const authRoutes      = require('./auth.routes');
+const userRoutes      = require('./user.routes');
+const characterRoutes = require('./character.routes');
+const battleRoutes    = require('./battle.routes');
 
 const router = Router();
 
@@ -21,6 +23,12 @@ router.use('/auth', authRoutes);
 
 // User routes (protected)
 router.use('/user', userRoutes);
+
+// Character & Cultivation
+router.use('/character', characterRoutes);
+
+// Battle
+router.use('/battle', battleRoutes);
 
 // 404 handler cho routes không tồn tại
 router.use((req, res) => {
